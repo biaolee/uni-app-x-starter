@@ -1,0 +1,42 @@
+<script setup lang="uts">
+import { useAppStore } from '@/store/app'
+
+withDefaults(defineProps<{
+  /** 导航栏标题 */
+  title?: string
+  /** 是否显示返回箭头 */
+  showBack?: boolean
+  /** 导航栏底部 1px 分割线 */
+  border?: boolean
+  /** 隐藏导航栏（全屏页使用） */
+  hideNavbar?: boolean
+}>(), {
+  title: '',
+  showBack: false,
+  border: false,
+  hideNavbar: false
+})
+const appStore = useAppStore()
+</script>
+
+<template>
+  <view class="app-layout page" :class="appStore.isDark ? 'app-theme-dark' : 'app-theme-light'">
+    <rice-navbar
+      v-if="!hideNavbar"
+      :title="title"
+      :left-arrow="showBack"
+      :border="border"
+      fixed
+      placeholder
+      safe-area-inset-top
+      auto-back
+    />
+    <slot />
+  </view>
+</template>
+
+<style lang="scss" scoped>
+.app-layout {
+  flex: 1;
+}
+</style>

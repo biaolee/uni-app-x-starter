@@ -1,0 +1,76 @@
+<script setup lang="uts">
+  import {
+    useAppStore
+  } from '@/store/app'
+  import {
+    useUserStore
+  } from '@/store/user'
+  import {
+    checkDirectEntry
+  } from '@/router/interceptor'
+  import {
+    logger
+  } from '@/utils/logger'
+
+  onError((error: string) => {
+    logger.error('app.error', error)
+  })
+
+  onLaunch(() => {
+    useUserStore().initSession()
+    // 初始化主题（跟随系统 / 浅色 / 深色），并同步给 RiceUI
+    useAppStore().initTheme()
+
+    // #ifdef MP-WEIXIN
+    if (wx.canIUse('getUpdateManager')) {
+      const updateManager = wx.getUpdateManager()
+      updateManager.onCheckForUpdate((res) => {
+        // 请求完新版本信息的回调
+        if (res.hasUpdate) {
+          updateManager.onUpdateReady(() => {
+            uni.showModal({
+              title: '提示',
+              content: '更新提示 新版本已经上线啦~，为了获得更好的体验，建议立即更新',
+              success: (res2) => {
+                if (res2.confirm) {
+                  updateManager.applyUpdate()
+                } else if (res2.cancel) {}
+              }
+            })
+          })
+          updateManager.onUpdateFailed(() => {
+            uni.showToast({
+              title: '更新失败 新版本更新失败，为了获得更好的体验，请您删除当前小程序，重新搜索打开',
+              icon: 'none',
+              mask: true,
+            })
+          })
+        }
+      })
+    }
+    // #endif
+
+  })
+
+  onShow((options ? : any) => {
+    useUserStore().initSession()
+    // #ifndef APP
+    // H5 直链访问 / 小程序冷启动分享页时，兜底校验登录态
+    checkDirectEntry(options)
+    // #endif
+  })
+
+</script>
+
+<style lang="scss">
+  /* #ifndef WEB */
+  @import '@/uni_modules/rice-ui/libs/style/index.css';
+  /* #endif */
+  @import '@/assets/styles/index.scss';
+
+  page {
+    font-size: 28rpx;
+    color: var(--app-text-color);
+  }
+
+</style>

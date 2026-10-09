@@ -1,0 +1,15 @@
+<template>
+  <app-layout title="排行榜" show-back>
+    <view class="card">
+      排行榜排行榜排行榜
+    </view>
+  </app-layout>
+</template>
+
+<script setup lang="uts">
+definePage({
+  style: {
+    navigationBarTitleText: '排行榜'
+  }
+})
+</script>

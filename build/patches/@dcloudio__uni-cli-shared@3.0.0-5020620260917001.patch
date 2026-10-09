@@ -1,0 +1,13 @@
+diff --git a/lib/@vue/compiler-sfc/dist/compiler-sfc.cjs.js b/lib/@vue/compiler-sfc/dist/compiler-sfc.cjs.js
+index 7ca86216c8c67013b4d03bcea839522fb8fca084..85b0e944a9b66f539495af17e49fa28b48097f59 100644
+--- a/lib/@vue/compiler-sfc/dist/compiler-sfc.cjs.js
++++ b/lib/@vue/compiler-sfc/dist/compiler-sfc.cjs.js
+@@ -23975,7 +23975,7 @@ let __temp${any}, __restore${any}
+       endOffset,
+       `
+ const __returned__ = ${returned}
+-Object.defineProperty(__returned__, '__isScriptSetup', { enumerable: false, value: true })
++const __isScriptSetupDescriptor = Object.create(null); __isScriptSetupDescriptor.enumerable = false; __isScriptSetupDescriptor.value = true; Object.defineProperty(__returned__, '__isScriptSetup', __isScriptSetupDescriptor)
+ return __returned__
+ }
+ 

@@ -1,0 +1,129 @@
+<script setup lang="uts">
+import { useAppStore } from '@/store/app'
+
+definePage({
+  style: {
+    navigationBarTitleText: '首页'
+  }
+})
+
+const appStore = useAppStore()
+
+function go(url: string): void {
+  uni.navigateTo({ url })
+}
+
+function onDarkChange(value: any): void {
+  appStore.setThemeMode(value ? 'dark' : 'light')
+}
+</script>
+
+<template>
+  <app-layout title="首页">
+    <view class="hero card">
+      <text class="hero-title">
+        uni-app x 企业级脚手架
+      </text>
+      <text class="hero-desc text-secondary">
+        蒸汽模式 Vapor · RiceUI · Pinia · 全端工程化 · 分包
+      </text>
+      <view class="flex-row hero-tags">
+        <rice-tag type="primary" plain round>
+          Android / iOS
+        </rice-tag>
+        <rice-tag type="success" plain round>
+          鸿蒙
+        </rice-tag>
+        <rice-tag type="warning" plain round>
+          H5
+        </rice-tag>
+        <rice-tag type="error" plain round>
+          微信小程序
+        </rice-tag>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="section-title">
+        功能示例
+      </text>
+      <rice-cell-group>
+        <rice-cell
+          title="RiceUI 组件示例"
+          label="常用组件、表单与主题能力"
+          arrow
+          clickable
+          @click="go('/pages-sub/pages/demo/ui')"
+        />
+        <rice-cell
+          title="z-paging-x 分页列表"
+          label="下拉刷新 / 触底加载 / 空态兜底"
+          arrow
+          clickable
+          @click="go('/pages-sub/pages/demo/paging')"
+        />
+        <rice-cell
+          title="登录鉴权示例"
+          label="路由拦截 + token 持久化"
+          arrow
+          clickable
+          @click="go('/pages-sub/pages/auth/login')"
+        />
+      </rice-cell-group>
+    </view>
+
+    <!-- #ifdef APP -->
+    <view class="card">
+      <text class="section-title">外观</text>
+      <view class="flex-row flex-between theme-row">
+        <text>深色模式</text>
+        <rice-switch
+          :model-value="appStore.isDark"
+          @change="onDarkChange"
+        />
+      </view>
+      <rice-cell
+        title="恢复跟随系统"
+        arrow
+        clickable
+        @click="appStore.setThemeMode('auto')"
+      />
+    </view>
+    <!-- #endif -->
+  </app-layout>
+</template>
+
+<style lang="scss" scoped>
+.hero {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-title {
+  font-size: 38rpx;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.hero-desc {
+  margin-top: 12rpx;
+}
+
+.hero-tags {
+  margin-top: 24rpx;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+  color: var(--app-text-color);
+}
+
+.theme-row {
+  padding: 20rpx 0;
+}
+</style>

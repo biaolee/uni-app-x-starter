@@ -1,0 +1,37 @@
+{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^app-layout$": "@/components/app-layout/app-layout.uvue"
+    }
+  },
+  "globalStyle": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "@navTextStyle",
+    "navigationBarTitleText": "uni-app-x-starter",
+    "navigationBarBackgroundColor": "@navBackgroundColor",
+    "backgroundColor": "@pageBackgroundColor",
+    "backgroundColorContent": "@backgroundColorContent",
+    "backgroundTextStyle": "@backgroundTextStyle"
+  },
+  "tabBar": {
+    "color": "@tabColor",
+    "selectedColor": "@tabSelectedColor",
+    "backgroundColor": "@tabBackgroundColor",
+    "borderStyle": "@tabBorderStyle",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/homeHL.png"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "我的",
+        "iconPath": "static/tabbar/personal.png",
+        "selectedIconPath": "static/tabbar/personalHL.png"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+diff --git a/dist/tsc/utils/options.js b/dist/tsc/utils/options.js
+index 3e6f3a010987d14f4ce337c483214ceeca60df0d..daabf8ef57a85e9fc6181b58d52fcc745276381d 100644
+--- a/dist/tsc/utils/options.js
++++ b/dist/tsc/utils/options.js
+@@ -159,7 +159,10 @@ function createBasicUtsOptions(inputDir, sourceMap) {
+     else {
+         (0, shared_1.extend)(options.tsconfigOverride.compilerOptions, {
+             paths: {
+-                vue: [path.resolve(inputDir, '../node_modules/@vue/runtime-core')],
++                // Root-layout projects and pnpm must resolve the project's Vue type entry.
++                vue: [path.dirname(require.resolve('@vue/runtime-core/package.json', {
++                    paths: [path.dirname(require.resolve('vue/package.json', { paths: [inputDir] }))],
++                }))],
+             },
+             typeRoots: [path.resolve(__dirname, '../../../lib/tsconfig/types')],
+         });

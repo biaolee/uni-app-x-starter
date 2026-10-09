@@ -1,0 +1,87 @@
+<script setup lang="uts">
+definePage({
+  style: {
+    navigationBarTitleText: '组件示例'
+  }
+})
+
+const switchValue = ref(true)
+const keyword = ref('')
+</script>
+
+<template>
+  <app-layout title="组件示例" show-back>
+    <view class="card">
+      <rice-divider text="按钮 Button" />
+      <view class="flex-row demo-row">
+        <rice-button type="primary" size="small" text="主要" />
+        <rice-button type="success" size="small" text="成功" />
+        <rice-button type="warning" size="small" text="警告" />
+        <rice-button type="error" size="small" text="危险" />
+      </view>
+      <view class="flex-row demo-row">
+        <rice-button type="primary" size="small" plain text="朴素" />
+        <rice-button type="default" size="small" text="默认" />
+        <rice-button type="primary" size="small" disabled text="禁用" />
+      </view>
+    </view>
+
+    <view class="card">
+      <rice-divider text="标签 Tag / 徽标 Badge" />
+      <view class="flex-row demo-row">
+        <rice-tag type="primary">
+          标签一
+        </rice-tag>
+        <rice-tag type="success" plain>
+          标签二
+        </rice-tag>
+        <rice-tag type="warning" round>
+          标签三
+        </rice-tag>
+        <rice-badge :value="8">
+          <rice-button type="default" size="small" text="消息" />
+        </rice-badge>
+      </view>
+    </view>
+
+    <view class="card">
+      <rice-divider text="表单 Form" />
+      <rice-form>
+        <rice-form-item label="关键词">
+          <rice-input
+            v-model="keyword"
+            placeholder="请输入关键词"
+            border="bottom"
+            clearable
+          />
+        </rice-form-item>
+        <rice-form-item label="开关">
+          <rice-switch v-model="switchValue" />
+        </rice-form-item>
+      </rice-form>
+    </view>
+
+    <view class="card">
+      <rice-divider text="单元格 Cell" />
+      <rice-cell-group>
+        <rice-cell title="普通单元格" value="内容" border />
+        <rice-cell title="可点击单元格" label="描述信息" arrow clickable />
+      </rice-cell-group>
+    </view>
+
+    <view class="card">
+      <rice-divider text="更多组件" dashed />
+      <text class="text-secondary">
+        完整组件清单见 RiceUI 文档：https://riceui.cn/components/quickstart.html
+      </text>
+    </view>
+  </app-layout>
+</template>
+
+<style lang="scss" scoped>
+.demo-row {
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 16rpx 0;
+}
+</style>

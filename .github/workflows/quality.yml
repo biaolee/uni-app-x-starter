@@ -1,0 +1,64 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web-and-weixin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.6.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run doctor
+      - run: pnpm generate
+      - run: pnpm check:routes
+      - run: pnpm lint
+      - run: pnpm type-check
+      - run: pnpm test
+      - run: pnpm build:h5
+      - run: node build/scripts/check-artifact.mjs web
+      - run: pnpm build:mp-weixin
+      - run: node build/scripts/check-artifact.mjs mp-weixin
+      - run: pnpm build:h5:test
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke:web
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-and-browser-diagnostics
+          path: test-results
+          if-no-files-found: ignore
+
+  native-compile:
+    if: vars.ENABLE_NATIVE_CI == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [app-android, app-ios, app-harmony]
+    runs-on: [self-hosted, hbuilderx-5.26, '${{ matrix.target }}']
+    env:
+      HBUILDERX_CLI_PATH: ${{ vars.HBUILDERX_CLI_PATH }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.6.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run doctor
+      - run: pnpm build:${{ matrix.target }}

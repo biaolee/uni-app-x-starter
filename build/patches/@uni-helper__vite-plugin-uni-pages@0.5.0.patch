@@ -1,0 +1,68 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 60ed1cb87c2d5b217841ff00b24aa9f1f13ac48f..4e2c198d34688b898831049ea5671c77abf558cc 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -16,10 +16,11 @@ import { globSync } from "tinyglobby";
+ import vm from "node:vm";
+ import babelGenerate from "@babel/generator";
+ import * as t from "@babel/types";
+-import { parse as parse$1 } from "@vue/compiler-sfc";
+ import { babelParse, isCallOf } from "ast-kit";
+ import * as ts from "typescript";
+ import writeFileAtomic from "write-file-atomic";
++// Use the active DCloud compiler aliases for both the SFC parser and its Vue dependencies.
++const { parse: parse$1 } = createRequire(import.meta.url)("@vue/compiler-sfc");
+ //#region src/constant.ts
+ /** Vite 模块解析用的虚拟模块标识 */
+ const MODULE_ID_VIRTUAL = "virtual:uni-pages";
+@@ -459,7 +460,7 @@ function parseSfcBlocks(code, filename) {
+ 	for (const [name, script] of [["<script setup>", sfc.scriptSetup], ["<script>", sfc.script]]) {
+ 		if (!script) continue;
+ 		try {
+-			const body = babelParse(script.content, script.lang || "js").body;
++			const body = babelParse(script.content, script.lang === "uts" ? "ts" : script.lang || "js").body;
+ 			blocks.push({
+ 				name,
+ 				body,
+@@ -826,8 +827,13 @@ var Page = class {
+ * `#ifdef  || MP-WEIXIN` 这样的非法指令（空平台名不是一个真实平台，
+ * 过滤掉永远不会出错）
+ */
++function normalizePlatform(platform) {
++	const normalized = platform.trim().toUpperCase();
++	return normalized === "H5" ? "WEB" : normalized;
++}
+ function platformsExcluding(platformList, currentPlatform) {
+-	return platformList.split("||").map((p) => p.trim()).filter((p) => p && p !== currentPlatform).sort();
++	const normalizedCurrent = normalizePlatform(currentPlatform);
++	return [.../* @__PURE__ */ new Set(platformList.split("||").map(normalizePlatform).filter((p) => p && p !== normalizedCurrent))].sort();
+ }
+ /**
+ * 把本次运行的一个载荷并入变体列表（规则 2）：
+@@ -1280,7 +1286,7 @@ function mergeIntoPagesJson(existingContent, data, options) {
+ 		subPackages: oldSubPackages
+ 	})) if (value != null && !Array.isArray(value)) throw new Error(`[vite-plugin-uni-pages] The "${field}" in the existing pages.json must be an array, please fix its syntax first`);
+ 	const { pages: _pages, subPackages: _subPackages, tabBar: _tabBar, ...pageJson } = options.globConfig || {};
+-	const currentPlatform = options.platform.toUpperCase();
++	const currentPlatform = normalizePlatform(options.platform);
+ 	pageJson.pages = mergePlatformItems(oldPages, currentPlatform, data.pages, "path").items;
+ 	ensureHomePageFirst(pageJson.pages, data.homePath);
+ 	pageJson.subPackages = oldSubPackages || new CommentArray();
+@@ -1497,7 +1503,7 @@ function homeStatusCompatible(a, b) {
+ */
+ function mergePlatformItems(source, currentPlatform, items, uniqueKeyName) {
+ 	const src = source || new CommentArray();
+-	currentPlatform = currentPlatform.toUpperCase();
++	currentPlatform = normalizePlatform(currentPlatform);
+ 	const lastPlatforms = extractLastPlatforms(src, currentPlatform);
+ 	const mergedMap = /* @__PURE__ */ new Map();
+ 	const variantsOf = (uniqueKey) => {
+@@ -2158,7 +2164,7 @@ function VitePluginUniPages(userOptions = {}) {
+ 		* 从 Vue SFC 中移除 definePage 宏调用，避免运行时报错
+ 		*/
+ 		async transform(code, id) {
+-			if (!FILE_EXTENSIONS.some((ext) => id.endsWith(ext))) return null;
++			if (!FILE_EXTENSIONS.some((ext) => id.split("?")[0].endsWith("." + ext))) return null;
+ 			const macro = findDefinePageMacro(code, id, { onParseError: (block, error) => {
+ 				this.warn(`[vite-plugin-uni-pages] Failed to parse ${block} in ${id}, its definePage macro may stay in the output: ${error instanceof Error ? error?.message : error}`);
+ 			} });

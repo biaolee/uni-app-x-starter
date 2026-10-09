@@ -1,0 +1,126 @@
+<script setup lang="uts">
+import { useUserStore } from '@/store/user'
+import { ENV } from '@/utils/env'
+
+definePage({
+  style: {
+    navigationBarTitleText: '我的'
+  }
+})
+
+const userStore = useUserStore()
+
+function go(url: string): void {
+  uni.navigateTo({ url })
+}
+
+function handleLogin(): void {
+  go('/pages-sub/pages/auth/login')
+}
+
+function handleLogout(): void {
+  uni.showModal({
+    title: '提示',
+    content: '确定退出登录吗？',
+    success: (res) => {
+      if (res.confirm) {
+        userStore.logout().then(() => uni.showToast({ title: '已退出登录', icon: 'none' }))
+      }
+    }
+  })
+}
+</script>
+
+<template>
+  <app-layout title="我的">
+    <view class="profile card flex-row">
+      <view class="avatar flex-center">
+        <text class="avatar-text">
+          {{ userStore.userInfo?.nickname?.charAt(0) || '游' }}
+        </text>
+      </view>
+      <view class="flex-1 profile-info">
+        <text class="profile-name">
+          {{ userStore.userInfo?.nickname || '未登录' }}
+        </text>
+        <text class="text-secondary">
+          {{ userStore.userInfo?.phone || '登录后体验完整功能' }}
+        </text>
+      </view>
+      <rice-button
+        v-if="!userStore.isLoggedIn"
+        type="primary"
+        size="small"
+        text="去登录"
+        @click="handleLogin"
+      />
+      <rice-button
+        v-else
+        type="default"
+        size="small"
+        plain
+        text="退出"
+        @click="handleLogout"
+      />
+    </view>
+
+    <view class="card">
+      <rice-cell-group>
+        <rice-cell
+          title="RiceUI 组件示例"
+          arrow
+          clickable
+          @click="go('/pages-sub/pages/demo/ui')"
+        />
+        <rice-cell
+          title="z-paging-x 分页列表"
+          arrow
+          clickable
+          @click="go('/pages-sub/pages/demo/paging')"
+        />
+      </rice-cell-group>
+    </view>
+
+    <view class="card">
+      <rice-cell
+        title="当前环境"
+        :value="ENV.mode"
+        border
+      />
+      <rice-cell
+        title="接口基址"
+        :value="ENV.baseUrl || '未配置'"
+      />
+    </view>
+  </app-layout>
+</template>
+
+<style lang="scss" scoped>
+.profile {
+  gap: 24rpx;
+}
+
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background-color: var(--app-primary-color);
+}
+
+.avatar-text {
+  color: #fff;
+  font-size: 40rpx;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.profile-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+</style>

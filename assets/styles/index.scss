@@ -1,0 +1,63 @@
+@import './variables.scss';
+@import './theme.scss';
+
+// ============================================================
+// 基础样式与常用工具类（保持克制，复杂布局请在组件内用 scoped 样式）
+// ============================================================
+
+view,
+text {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  background-color: var(--app-bg-color);
+}
+
+.card {
+  margin: $gap-md;
+  padding: $gap-md;
+  background-color: var(--app-card-bg);
+  border-radius: $radius-md;
+}
+
+// flex 工具类（蒸汽模式 flex-direction 默认 column，横向布局需显式 row）
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.text-secondary {
+  color: var(--app-text-color-secondary);
+  font-size: 24rpx;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

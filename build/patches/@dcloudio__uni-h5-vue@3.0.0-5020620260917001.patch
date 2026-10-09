@@ -1,0 +1,27 @@
+diff --git a/dist-x/vue.runtime.esm.js b/dist-x/vue.runtime.esm.js
+index 3c45881662a1729524c0c3584c88b155f70508e5..ab28f3c1af96fdb9982ea9f63f2311fd8f79d229 100644
+--- a/dist-x/vue.runtime.esm.js
++++ b/dist-x/vue.runtime.esm.js
+@@ -5950,6 +5950,7 @@ const initSlots = (instance, children) => {
+   }
+   def(instance.slots, InternalObjectKey, 1);
+ };
++const uniSafeExtendSlots = (slots, children) => { for (const key in children) { if (key === "_" || key === "__vInternal") continue; try { slots[key] = children[key]; } catch (e) {} } };
+ const updateSlots = (instance, children, optimized) => {
+   const { vnode, slots } = instance;
+   let needDeletionCheck = true;
+@@ -5958,12 +5959,12 @@ const updateSlots = (instance, children, optimized) => {
+     const type = children._;
+     if (type) {
+       if (!!(process.env.NODE_ENV !== "production") && isHmrUpdating) {
+-        extend(slots, children);
++        uniSafeExtendSlots(slots, children);
+         trigger(instance, "set", "$slots");
+       } else if (optimized && type === 1) {
+         needDeletionCheck = false;
+       } else {
+-        extend(slots, children);
++        uniSafeExtendSlots(slots, children);
+         if (!optimized && type === 1) {
+           delete slots._;
+         }

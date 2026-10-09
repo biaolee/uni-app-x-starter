@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "baseUrl": ".",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./*"],
+      "@img/*": ["./static/*"],
+      "tslib": ["./node_modules/tslib/tslib.d.ts"]
+    },
+    "resolveJsonModule": true,
+    "allowArbitraryExtensions": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitThis": true,
+    "importHelpers": false,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "vueCompilerOptions": {
+    "extensions": [".vue", ".uvue"]
+  },
+  "include": [
+    "*.ts",
+    "*.uts",
+    "*.uvue",
+    "*.vue",
+    "*.d.ts",
+    "**/*.ts",
+    "**/*.uts",
+    "**/*.uvue",
+    "**/*.vue",
+    "**/*.d.ts",
+    "**/*.json",
+    "vite.config.ts"
+  ],
+  "exclude": ["node_modules", "unpackage", "dist", "uni_modules"]
+}

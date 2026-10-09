@@ -1,0 +1,15 @@
+{
+  "projectName": "my-mobile-app",
+  "appTitle": "My Mobile App",
+  "platforms": ["web"],
+  "appid": "",
+  "weixinAppid": "",
+  "baseUrl": "https://api.example.com",
+  "fileUploadMode": "server-oss",
+  "storageNamespace": "my-mobile-app",
+  "profile": "base",
+  "excelImportPath": "/imports/excel",
+  "serverUploadPath": "/files/upload",
+  "qiniuTokenPath": "/files/qiniu-token",
+  "qiniuUploadUrl": ""
+}

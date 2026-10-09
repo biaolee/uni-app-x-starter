@@ -1,0 +1,132 @@
+<script setup lang="uts">
+import { navigateAfterLogin } from '@/router/interceptor'
+import { useUserStore } from '@/store/user'
+import { ENV } from '@/utils/env'
+import { createDemoSession } from '@/demo/auth'
+
+definePage({
+  style: {
+    navigationBarTitleText: '登录'
+  }
+})
+
+const redirect = ref('')
+
+onLoad((options?: any) => {
+  if (options?.redirect) {
+    redirect.value = decodeURIComponent(options.redirect)
+  }
+})
+
+const form = reactive({
+  username: ENV.authMode === 'demo' ? 'admin' : '',
+  password: ENV.authMode === 'demo' ? '123456' : ''
+})
+const loading = ref(false)
+
+async function handleLogin(): Promise<void> {
+  if (!form.username.trim()) {
+    uni.showToast({ title: '请输入账号', icon: 'none' })
+    return
+  }
+  if (!form.password.trim()) {
+    uni.showToast({ title: '请输入密码', icon: 'none' })
+    return
+  }
+
+  loading.value = true
+  try {
+    if (import.meta.env.VITE_AUTH_MODE === 'demo') {
+      const demo = createDemoSession(form.username)
+      useUserStore().setSession({ token: demo.token, expiresIn: demo.expiresIn }, demo.user)
+    }
+    else {
+      await useUserStore().login({ username: form.username, password: form.password })
+    }
+
+    uni.showToast({ title: '登录成功', icon: 'success' })
+    setTimeout(() => navigateAfterLogin(redirect.value), 500)
+  }
+  catch {
+    uni.showToast({ title: '登录失败，请检查账号或网络', icon: 'none' })
+  }
+  finally {
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <app-layout title="登录" show-back>
+    <view class="login-hero">
+      <text class="login-title">
+        欢迎登录
+      </text>
+      <text class="text-secondary">
+        企业级 uni-app x 脚手架示例
+      </text>
+    </view>
+
+    <view class="card login-form">
+      <rice-form>
+        <rice-form-item label="账号" required>
+          <rice-input
+            v-model="form.username"
+            placeholder="请输入账号"
+            clearable
+          />
+        </rice-form-item>
+        <rice-form-item label="密码" required>
+          <rice-input
+            v-model="form.password"
+            placeholder="请输入密码"
+            type="password"
+            show-password
+          />
+        </rice-form-item>
+      </rice-form>
+
+      <rice-button
+        class="login-btn"
+        type="primary"
+        size="large"
+        :loading="loading"
+        :text="loading ? '登录中...' : '登 录'"
+        @click="handleLogin"
+      />
+      <text v-if="ENV.authMode === 'demo'" class="login-tip text-secondary">
+        演示账号 admin / 123456，点击即可体验
+      </text>
+    </view>
+  </app-layout>
+</template>
+
+<style lang="scss" scoped>
+.login-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  padding: 48rpx 32rpx 16rpx;
+}
+
+.login-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--app-text-color);
+}
+
+.login-form {
+  margin-top: 16rpx;
+}
+
+.login-btn {
+  margin-top: 40rpx;
+  width: 100%;
+}
+
+.login-tip {
+  display: block;
+  margin-top: 24rpx;
+  text-align: center;
+}
+</style>

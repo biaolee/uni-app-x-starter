@@ -1,0 +1,41 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+unpackage/
+test-results/
+
+# 约定式路由 / 自动导入生成文件（由 pages.config.json 与页面扫描自动生成，勿手改、勿提交）
+/pages.json
+/types/uni-pages.d.ts
+
+# 日志
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 编辑器 / IDE
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# HBuilderX 语言服务插件本地配置（运行目标，随个人环境变化）
+platformConfig.json
+
+# 本地排查临时目录
+.hx-tmp/
+tests/
+test-results/
+docs/
+
+# 环境变量（统一在 env/ 目录；按需取消注释，避免泄露生产配置）
+# env/.env.production
+# env/.env.test

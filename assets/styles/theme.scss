@@ -1,0 +1,17 @@
+.app-theme-light {
+  --app-bg-color: #{$bg-color};
+  --app-card-bg: #{$bg-color-card};
+  --app-text-color: #{$text-color};
+  --app-text-color-secondary: #{$text-color-secondary};
+  --app-border-color: #{$border-color};
+  --app-primary-color: #{$brand-primary};
+}
+
+.app-theme-dark {
+  --app-bg-color: #141618;
+  --app-card-bg: #1e2023;
+  --app-text-color: #f2f3f5;
+  --app-text-color-secondary: #969799;
+  --app-border-color: #2c2d30;
+  --app-primary-color: #4da8ff;
+}

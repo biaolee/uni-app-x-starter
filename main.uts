@@ -1,0 +1,21 @@
+import App from './App.uvue'
+import { createSSRApp } from 'vue'
+import pinia from './store'
+import { installRouteInterceptor } from './router/interceptor'
+import { installGlobalLogging } from './utils/logger'
+
+// #ifdef WEB
+// H5 端（样式隔离 2.0）：RiceUI 基础样式需在入口引入；App / 小程序端在 App.uvue 的 style 中引入
+import '@/uni_modules/rice-ui/libs/style/index.css'
+// #endif
+
+export function createApp() {
+  // 安装全局路由拦截器（登录鉴权）
+  installRouteInterceptor()
+
+  const app = createSSRApp(App)
+  installGlobalLogging(app)
+  app.use(pinia)
+
+  return { app }
+}

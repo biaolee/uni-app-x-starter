@@ -1,0 +1,111 @@
+<script setup lang="uts">
+definePage({
+  style: {
+    navigationBarTitleText: '分页列表'
+  }
+})
+
+interface ArticleItem {
+  id: number
+  title: string
+  summary: string
+  time: string
+}
+
+const TOTAL = 35
+const PAGE_SIZE = 10
+
+const pagingRef = ref<any>(null)
+const articleList = ref<ArticleItem[]>([])
+
+function createItem(id: number): ArticleItem {
+  return {
+    id,
+    title: `文章标题 #${id}`,
+    summary: 'z-paging-x 原生分页：下拉刷新、触底自动加载、空态兜底开箱即用。',
+    time: '刚刚'
+  }
+}
+
+/** z-paging-x 查询回调：pageNo 从 1 开始 */
+function onQuery(pageNo: number, _pageSize: number): void {
+  // 模拟网络请求
+  setTimeout(() => {
+    const start = (pageNo - 1) * PAGE_SIZE
+    const count = Math.max(0, Math.min(PAGE_SIZE, TOTAL - start))
+    const list: ArticleItem[] = Array.from({ length: count }, (_, index) => createItem(start + index + 1))
+
+    if (start + PAGE_SIZE >= TOTAL) {
+      // 最后一页：completeByNoMore 会自动展示"没有更多"
+      pagingRef.value?.completeByNoMore(list)
+    }
+    else {
+      pagingRef.value?.complete(list)
+    }
+  }, 600)
+}
+
+function onUpdateList(value: ArticleItem[]): void {
+  articleList.value = value
+}
+</script>
+
+<template>
+  <app-layout title="分页列表" show-back>
+    <view class="paging-wrap">
+      <z-paging-x
+        ref="pagingRef"
+        list-is="list-view"
+        :model-value="articleList"
+        :default-page-size="PAGE_SIZE"
+        :refresher-enabled="true"
+        :use-custom-refresher="true"
+        :show-back-to-top="true"
+        @update:model-value="onUpdateList"
+        @query="onQuery"
+      >
+        <list-item
+          v-for="item in articleList"
+          :key="item.id"
+        >
+          <view class="card article-item">
+            <view class="flex-row flex-between">
+              <text class="article-title">
+                {{ item.title }}
+              </text>
+              <text class="text-secondary">
+                {{ item.time }}
+              </text>
+            </view>
+            <text class="article-summary text-secondary">
+              {{ item.summary }}
+            </text>
+          </view>
+        </list-item>
+      </z-paging-x>
+    </view>
+  </app-layout>
+</template>
+
+<style lang="scss" scoped>
+.paging-wrap {
+  flex: 1;
+}
+
+.article-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin: 16rpx 24rpx;
+}
+
+.article-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+.article-summary {
+  line-height: 1.5;
+}
+</style>

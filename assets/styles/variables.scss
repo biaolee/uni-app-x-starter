@@ -1,0 +1,30 @@
+// ============================================================
+// 全局 SCSS 变量（设计令牌），可被任意组件通过 uni.scss 自动注入使用
+// ============================================================
+
+// 品牌色
+$brand-primary: #1989fa;
+$brand-success: #07c160;
+$brand-warning: #e6a23c;
+$brand-error: #f56c6c;
+
+// 文字色
+$text-color: #323233;
+$text-color-secondary: #969799;
+$text-color-placeholder: #c8c9cc;
+
+// 背景 / 边框
+$bg-color: #f7f8fa;
+$bg-color-card: #ffffff;
+$border-color: #ebedf0;
+
+// 圆角
+$radius-sm: 8rpx;
+$radius-md: 16rpx;
+$radius-lg: 24rpx;
+
+// 间距
+$gap-xs: 8rpx;
+$gap-sm: 16rpx;
+$gap-md: 24rpx;
+$gap-lg: 32rpx;
